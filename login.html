@@ -1,47 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - Gaming App</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Login</h1>
-    <form id="loginForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
-      <button type="submit">Log In</button>
-    </form>
-    <p id="error" class="error"></p>
-    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
-  </div>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form action="/admin/login" method="POST">
+            <label for="username">Username or Email</label>
+            <input type="text" id="username" name="username" required />
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-  <script>
-    const loginForm = document.getElementById('loginForm');
-    const errorEl = document.getElementById('error');
+    <script>
+        // TODO: Replace the following with your app's Firebase project configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAyy_wtydR_gu7sY4phR_ruKVqI4DMWjh0",
+  authDomain: "project1-36830.firebaseapp.com",
+  projectId: "project1-36830",
+  storageBucket: "project1-36830.firebasestorage.app",
+  messagingSenderId: "963599997284",
+  appId: "1:963599997284:web:c402048c7f10c33b194271",
+  measurementId: "G-G7LK3B2RBK"
+};
 
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const username = loginForm.username.value.trim();
-      const password = loginForm.password.value.trim();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-      if (!username || !password) {
-        errorEl.textContent = 'Username and password are required.';
-        return;
-      }
-
-      const storedPassword = localStorage.getItem('user_' + username);
-      if (storedPassword && storedPassword === password) {
-        sessionStorage.setItem('loggedInUser', username);
-        window.location.href = 'dashboard.html';
-      } else {
-        errorEl.textContent = 'Invalid username or password.';
-      }
-    });
-  </script>
+        // Initialize services
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 </body>
 </html>

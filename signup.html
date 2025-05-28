@@ -1,52 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Signup - Gaming App</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .signup-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 320px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Signup</h1>
-    <form id="signupForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
-      <button type="submit">Sign Up</button>
-    </form>
-    <p id="error" class="error"></p>
-    <p>Already have an account? <a href="login.html">Login here</a></p>
-  </div>
+    <div class="signup-container">
+        <h2>Admin Signup</h2>
+        <form action="/admin/signup" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required />
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-  <script>
-    const signupForm = document.getElementById('signupForm');
-    const errorEl = document.getElementById('error');
+    <script>
+        // TODO: Replace the following with your app's Firebase project configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAyy_wtydR_gu7sY4phR_ruKVqI4DMWjh0",
+  authDomain: "project1-36830.firebaseapp.com",
+  projectId: "project1-36830",
+  storageBucket: "project1-36830.firebasestorage.app",
+  messagingSenderId: "963599997284",
+  appId: "1:963599997284:web:c402048c7f10c33b194271",
+  measurementId: "G-G7LK3B2RBK"
+};
 
-    signupForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const username = signupForm.username.value.trim();
-      const password = signupForm.password.value.trim();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-      if (!username || !password) {
-        errorEl.textContent = 'Username and password are required.';
-        return;
-      }
-
-      // Check if user already exists in localStorage
-      if (localStorage.getItem('user_' + username)) {
-        errorEl.textContent = 'Username already exists.';
-        return;
-      }
-
-      // Save user to localStorage
-      localStorage.setItem('user_' + username, password);
-      // Set logged in user
-      sessionStorage.setItem('loggedInUser', username);
-      // Redirect to dashboard
-      window.location.href = 'dashboard.html';
-    });
-  </script>
+        // Initialize services
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
 </body>
 </html>

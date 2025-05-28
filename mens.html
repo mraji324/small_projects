@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Mens Wear</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+            gap: 1rem;
+        }
+        .product-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .product-card h3 {
+            margin-top: 0;
+        }
+        .product-card p {
+            margin: 0.5rem 0;
+        }
+        .product-card .price {
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Mens Wear</h2>
+        <div class="product-list" id="productList">
+            <!-- Products will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // TODO: Replace with your Firebase project configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAyy_wtydR_gu7sY4phR_ruKVqI4DMWjh0",
+  authDomain: "project1-36830.firebaseapp.com",
+  projectId: "project1-36830",
+  storageBucket: "project1-36830.firebasestorage.app",
+  messagingSenderId: "963599997284",
+  appId: "1:963599997284:web:2245f2f23acb2211194271",
+  measurementId: "G-LE07WKFD8P"
+};
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const productList = document.getElementById('productList');
+
+        // Fetch and display mens wear products
+        db.collection('mensWear').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+            productList.innerHTML = '';
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <h3>${data.productName}</h3>
+                    <p>${data.description}</p>
+                    <p class="price">$${data.price.toFixed(2)}</p>
+                `;
+                productList.appendChild(productCard);
+            });
+        }, error => {
+            productList.innerHTML = '<p>Error loading products: ' + error.message + '</p>';
+        });
+    </script>
+</body>
+</html>
