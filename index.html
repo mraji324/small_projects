@@ -2,85 +2,505 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Software Job Application Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shopping App</title>
   <style>
+    /* Flipkart inspired styles */
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background-color: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f3f6;
+      margin: 0;
+      padding: 0;
+      color: #212121;
     }
-    form {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 1.5rem;
-      padding: 0.7rem 1.5rem;
-      background-color: #007bff;
+
+    header {
+      background-color: #2874f0;
+      padding: 10px 20px;
       color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-family: 'Arial Black', Arial, sans-serif;
+      font-size: 28px;
+      margin: 0;
+      cursor: default;
+      user-select: none;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: #212121;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      margin: 12px 0 6px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #212121;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    select,
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus,
+    select:focus,
+    input[type="text"]:focus {
+      border-color: #2874f0;
+      outline: none;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      background-color: #2874f0;
       border: none;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 1rem;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background-color: #0b5ed7;
     }
-    .success-message {
-      margin-top: 1rem;
-      color: green;
-      font-weight: bold;
+
+    .error {
+      color: #d32f2f;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
     }
-    .error-message {
-      margin-top: 1rem;
-      color: red;
-      font-weight: bold;
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .section ul li {
+      background-color: #2874f0;
+      color: white;
+      margin: 5px;
+      padding: 15px 25px;
+      border-radius: 4px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      min-width: 120px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s ease;
+      cursor: default;
+      user-select: none;
+    }
+
+    .section ul li:hover {
+      background-color: #0b5ed7;
+    }
+
+    .logout {
+      display: block;
+      text-align: right;
+      margin-bottom: 30px;
+      color: #2874f0;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .logout:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .link {
+      color: #2874f0;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
     }
   </style>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <!-- Firebase Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <h1>Software Job Application</h1>
-  <form id="applicationForm">
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="name" required />
+  <div class="container">
 
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="email" required />
+    <!-- Signup Section -->
+    <section id="signupSection" class="hidden">
+      <h1>Signup</h1>
+      <form id="signupForm">
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" name="email" required />
+        <label for="signupPassword">Password:</label>
+        <input type="password" id="signupPassword" name="password" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p id="signupError" class="error"></p>
+      <p class="link" id="toLogin">Already have an account? Login here</p>
+    </section>
 
-    <label for="phone">Phone Number</label>
-    <input type="tel" id="phone" name="phone" required />
+    <!-- Login Section -->
+    <section id="loginSection">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required />
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required />
+        <button type="submit">Log In</button>
+      </form>
+      <p id="loginError" class="error"></p>
+      <p class="link" id="toSignup">Don't have an account? Sign up here</p>
+    </section>
 
-    <label for="resume">Resume Link (e.g., Google Drive, Dropbox)</label>
-    <input type="url" id="resume" name="resume" required />
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="hidden">
+      <h1>Welcome, <span id="dashboardUsername"></span>!</h1>
+      <p class="logout" id="logout">Logout</p>
+      <h2>Shopping Sections</h2>
+      <div id="shoppingSections"></div>
+    </section>
 
-    <label for="coverLetter">Cover Letter</label>
-    <textarea id="coverLetter" name="coverLetter" rows="5" required></textarea>
+    <!-- Admin Section -->
+    <section id="adminSection" class="hidden">
+      <h1>Admin Dashboard</h1>
+      <form id="addItemForm">
+        <label for="categorySelect">Category:</label>
+        <select id="categorySelect" required>
+          <option value="">Select Category</option>
+          <option value="groceries">Groceries</option>
+          <option value="clothes">Clothes</option>
+          <option value="fashions">Fashions</option>
+          <option value="electronics">Electronics</option>
+        </select>
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName" required />
+        <label for="itemImageUrl">Image URL:</label>
+        <input type="text" id="itemImageUrl" placeholder="Enter image URL" required />
+        <button type="submit">Add Item</button>
+      </form>
+      <p id="addItemError" class="error"></p>
+      <button id="adminLogout" class="logout">Logout</button>
+    </section>
 
-    <button type="submit">Submit Application</button>
-    <div id="message"></div>
-  </form>
+  </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="app.js"></script>
+  <script>
+    // Your Firebase configuration
+   const firebaseConfig = {
+    apiKey: "AIzaSyCsow6oh_n_33y9InCW5odvdO5CB2_BrvM",
+    authDomain: "shopping-application-821ba.firebaseapp.com",
+    projectId: "shopping-application-821ba",
+    storageBucket: "shopping-application-821ba.appspot.com",
+    messagingSenderId: "882736257348",
+    appId: "1:882736257348:web:b6eaac071eaa7871321f11",
+    measurementId: "G-07HE16B7ZK"
+  };
+
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const signupSection = document.getElementById('signupSection');
+    const loginSection = document.getElementById('loginSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const adminSection = document.getElementById('adminSection');
+
+    const toLoginLink = document.getElementById('toLogin');
+    const toSignupLink = document.getElementById('toSignup');
+
+    const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
+
+    const signupError = document.getElementById('signupError');
+    const loginError = document.getElementById('loginError');
+
+    const dashboardUsername = document.getElementById('dashboardUsername');
+    const shoppingSectionsDiv = document.getElementById('shoppingSections');
+    const logoutLink = document.getElementById('logout');
+
+    const addItemForm = document.getElementById('addItemForm');
+    const categorySelect = document.getElementById('categorySelect');
+    const itemNameInput = document.getElementById('itemName');
+    const itemImageUrl = document.getElementById('itemImageUrl');
+    const addItemError = document.getElementById('addItemError');
+    const adminLogoutBtn = document.getElementById('adminLogout');
+
+    // Define admin emails
+    const adminEmails = ['admin@example.com']; // Replace with actual admin emails
+
+    function showSection(section) {
+      signupSection.classList.add('hidden');
+      loginSection.classList.add('hidden');
+      dashboardSection.classList.add('hidden');
+      adminSection.classList.add('hidden');
+      section.classList.remove('hidden');
+    }
+
+    function loadDashboard(user) {
+      dashboardUsername.textContent = user.email;
+      shoppingSectionsDiv.innerHTML = '';
+      // Fetch items from Firestore grouped by category
+      db.collection('items').get().then(querySnapshot => {
+        const itemsByCategory = {};
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          console.log('Item data:', data);
+          if (!data.category || !data.name || !data.imageUrl) {
+            console.warn('Missing fields in item:', data);
+            return;
+          }
+          if (!itemsByCategory[data.category]) {
+            itemsByCategory[data.category] = [];
+          }
+          itemsByCategory[data.category].push({ name: data.name, imageUrl: data.imageUrl });
+        });
+        for (const category in itemsByCategory) {
+          const sectionDiv = document.createElement('div');
+          sectionDiv.classList.add('section');
+          const h3 = document.createElement('h3');
+          h3.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+          sectionDiv.appendChild(h3);
+          const ul = document.createElement('ul');
+          itemsByCategory[category].forEach(item => {
+            const li = document.createElement('li');
+            // Create image element with mouseover effect
+            const img = document.createElement('img');
+            img.src = item.imageUrl;
+            img.alt = item.name;
+            img.classList.add('item-image');
+            li.appendChild(img);
+            // Add item name below image
+            const span = document.createElement('span');
+            span.textContent = item.name;
+            li.appendChild(span);
+            ul.appendChild(li);
+          });
+          sectionDiv.appendChild(ul);
+          shoppingSectionsDiv.appendChild(sectionDiv);
+        }
+        showSection(dashboardSection);
+      }).catch(error => {
+        console.error('Error fetching items:', error);
+      });
+    }
+
+    function loadAdminDashboard(user) {
+      addItemError.textContent = '';
+      categorySelect.value = '';
+      itemNameInput.value = '';
+      itemImageUrl.value = '';
+      showSection(adminSection);
+    }
+
+    toLoginLink.addEventListener('click', () => {
+      signupError.textContent = '';
+      showSection(loginSection);
+    });
+
+    toSignupLink.addEventListener('click', () => {
+      loginError.textContent = '';
+      showSection(signupSection);
+    });
+
+    signupForm.addEventListener('submit', e => {
+      e.preventDefault();
+      signupError.textContent = '';
+      const email = signupForm.email.value.trim();
+      const password = signupForm.password.value.trim();
+
+      if (!email || !password) {
+        signupError.textContent = 'Email and password are required.';
+        return;
+      }
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          if (adminEmails.includes(user.email)) {
+            loadAdminDashboard(user);
+          } else {
+            loadDashboard(user);
+          }
+        })
+        .catch(error => {
+          signupError.textContent = error.message;
+        });
+    });
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      loginError.textContent = '';
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value.trim();
+
+      if (!email || !password) {
+        loginError.textContent = 'Email and password are required.';
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          if (adminEmails.includes(user.email)) {
+            loadAdminDashboard(user);
+          } else {
+            loadDashboard(user);
+          }
+        })
+        .catch(error => {
+          loginError.textContent = error.message;
+        });
+    });
+
+    logoutLink.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        showSection(loginSection);
+      });
+    });
+
+    adminLogoutBtn.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        showSection(loginSection);
+      });
+    });
+
+    addItemForm.addEventListener('submit', e => {
+      e.preventDefault();
+      addItemError.textContent = '';
+      const category = categorySelect.value;
+      const itemName = itemNameInput.value.trim();
+      const itemImageUrlValue = itemImageUrl.value.trim();
+
+      if (!category || !itemName || !itemImageUrlValue) {
+        addItemError.textContent = 'Category, item name, and image URL are required.';
+        return;
+      }
+
+      // Add item to Firestore
+      db.collection('items').add({
+        category,
+        name: itemName,
+        imageUrl: itemImageUrlValue
+      }).then(() => {
+        addItemError.textContent = 'Item added successfully.';
+        categorySelect.value = '';
+        itemNameInput.value = '';
+        itemImageUrl.value = '';
+      }).catch(error => {
+        addItemError.textContent = 'Error adding item: ' + error.message;
+      });
+    });
+
+    // Monitor auth state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        if (adminEmails.includes(user.email)) {
+          loadAdminDashboard(user);
+        } else {
+          loadDashboard(user);
+        }
+      } else {
+        showSection(loginSection);
+      }
+    });
+  </script>
+  <style>
+    /* Styles for item images and mouseover effect */
+    .item-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: block;
+      margin: 0 auto 8px;
+      cursor: pointer;
+    }
+
+    .item-image:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      z-index: 10;
+      position: relative;
+    }
+
+    li span {
+      display: block;
+      text-align: center;
+      font-weight: 600;
+      color: white;
+    }
+  </style>
 </body>
 </html>
