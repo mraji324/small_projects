@@ -3,133 +3,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vue.js Chatbot with Firebase</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Vue.js CDN -->
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-  <!-- Firebase SDKs -->
+  <title>Gaming App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+    }
+
+    .games-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .games-list li {
+      background-color: #007bff;
+      color: white;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .logout {
+      display: block;
+      text-align: right;
+      margin-bottom: 20px;
+      color: #007bff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .logout:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .link {
+      color: #007bff;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <!-- Firebase App (the core Firebase SDK) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
 <body>
-  <div id="app" class="chat-container">
-    <h1>Chatbot</h1>
-    <div class="chat-window">
-      <div v-for="msg in messages" :key="msg.id" :class="['chat-message', msg.sender]">
-        <div class="message-content">{{ msg.text }}</div>
-      </div>
-    </div>
-    <form @submit.prevent="sendMessage" class="input-form">
-      <input
-        v-model="userInput"
-        type="text"
-        placeholder="Type your message..."
-        autocomplete="off"
-        required
-      />
-      <button type="submit">Send</button>
-    </form>
+  <div class="container">
+
+    <!-- Signup Section -->
+    <section id="signupSection" class="hidden">
+      <h1>Signup</h1>
+      <form id="signupForm">
+        <label for="signupEmail">Email:</label>
+        <input type="email" id="signupEmail" name="email" required />
+        <label for="signupPassword">Password:</label>
+        <input type="password" id="signupPassword" name="password" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p id="signupError" class="error"></p>
+      <p class="link" id="toLogin">Already have an account? Login here</p>
+    </section>
+
+    <!-- Login Section -->
+    <section id="loginSection">
+      <h1>Login</h1>
+      <form id="loginForm">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required />
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required />
+        <button type="submit">Log In</button>
+      </form>
+      <p id="loginError" class="error"></p>
+      <p class="link" id="toSignup">Don't have an account? Sign up here</p>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="hidden">
+      <h1>Welcome, <span id="dashboardUsername"></span>!</h1>
+      <p class="logout" id="logout">Logout</p>
+      <h2>Available Games</h2>
+      <ul class="games-list" id="gamesList"></ul>
+    </section>
+
   </div>
 
   <script>
-    // Firebase configuration - replace with your own Firebase project config
-       const firebaseConfig = {
-    apiKey: "AIzaSyB4xTa2lINTqzAcCCHf-uSYyGB4y_4to5U",
-    authDomain: "web-application-24833.firebaseapp.com",
-    databaseURL: "https://web-application-24833-default-rtdb.firebaseio.com",
-    projectId: "web-application-24833",
-    storageBucket: "web-application-24833.firebasestorage.app",
-    messagingSenderId: "244072157741",
-    appId: "1:244072157741:web:5a75807fe19a3cb6311ea4",
-    measurementId: "G-CLY9ZGED63"
-  };
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnvZx2k85hO6qCFaucpjVEKfz4q4EM89M",
+      authDomain: "web-development-b82e1.firebaseapp.com",
+      projectId: "web-development-b82e1",
+      storageBucket: "web-development-b82e1.firebasestorage.app",
+      messagingSenderId: "56024874185",
+      appId: "1:56024874185:web:0d897b6b5cf82c43476118",
+      measurementId: "G-XVX3L0YKPX"
+    };
+
     // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-    const { createApp } = Vue;
+    const signupSection = document.getElementById('signupSection');
+    const loginSection = document.getElementById('loginSection');
+    const dashboardSection = document.getElementById('dashboardSection');
 
-    createApp({
-      data() {
-        return {
-          userInput: '',
-          messages: []
-        };
-      },
-      created() {
-        // Listen for new messages in Firebase Realtime Database
-        const messagesRef = database.ref('messages');
-        messagesRef.on('child_added', snapshot => {
-          const msg = snapshot.val();
-          msg.id = snapshot.key;
-          this.messages.push(msg);
-          this.scrollToBottom();
-        });
-      },
-      methods: {
-        sendMessage() {
-          if (!this.userInput.trim()) return;
+    const toLoginLink = document.getElementById('toLogin');
+    const toSignupLink = document.getElementById('toSignup');
 
-          const userMessage = {
-            text: this.userInput,
-            sender: 'user',
-            timestamp: Date.now()
-          };
+    const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
 
-          // Push user message to Firebase
-          const messagesRef = database.ref('messages');
-          messagesRef.push(userMessage);
+    const signupError = document.getElementById('signupError');
+    const loginError = document.getElementById('loginError');
 
-          // Generate bot response
-          this.generateBotResponse(this.userInput);
+    const dashboardUsername = document.getElementById('dashboardUsername');
+    const gamesList = document.getElementById('gamesList');
+    const logoutLink = document.getElementById('logout');
 
-          this.userInput = '';
-        },
-        generateBotResponse(userText) {
-          // Enhanced keyword-based response logic with more prompts and varied answers
-          const text = userText.toLowerCase().trim();
+    const games = [
+      { id: 1, name: 'Chess' },
+      { id: 2, name: 'Sudoku' },
+      { id: 3, name: 'Tetris' },
+      { id: 4, name: 'Pac-Man' },
+    ];
 
-          const responses = [
-            { keywords: ['hello', 'hi', 'hey'], replies: ['Hello! How can I help you today?', 'Hi there! What can I do for you?', 'Hey! How can I assist you?'] },
-            { keywords: ['how are you', 'how are you doing'], replies: ["I'm a bot, but I'm doing great! Thanks for asking.", "I'm here to help you anytime!"] },
-            { keywords: ['help', 'support'], replies: ['Sure! Ask me anything or type your message.', 'I am here to assist you. What do you need help with?'] },
-            { keywords: ['bye', 'goodbye', 'see you'], replies: ['Goodbye! Have a nice day!', 'See you later! Take care!', 'Bye! Come back soon!'] },
-            { keywords: ['thank you', 'thanks'], replies: ['You\'re welcome!', 'No problem!', 'Glad to help!'] },
-            { keywords: ['what is your name', 'who are you'], replies: ['I am your friendly chatbot.', 'I am a chatbot here to assist you.'] },
-            { keywords: ['weather'], replies: ['I am not connected to weather services yet, but I hope it\'s nice where you are!'] },
-            { keywords: ['joke'], replies: ['Why did the computer show up at work late? It had a hard drive!', 'Why do programmers prefer dark mode? Because light attracts bugs!'] }
-          ];
+    function showSection(section) {
+      signupSection.classList.add('hidden');
+      loginSection.classList.add('hidden');
+      dashboardSection.classList.add('hidden');
+      section.classList.remove('hidden');
+    }
 
-          let responseText = "Sorry, I didn't understand that.";
+    function loadDashboard(user) {
+      dashboardUsername.textContent = user.email;
+      gamesList.innerHTML = '';
+      games.forEach(game => {
+        const li = document.createElement('li');
+        li.textContent = game.name;
+        gamesList.appendChild(li);
+      });
+      showSection(dashboardSection);
+    }
 
-          for (const entry of responses) {
-            if (entry.keywords.some(keyword => text.includes(keyword))) {
-              const randomIndex = Math.floor(Math.random() * entry.replies.length);
-              responseText = entry.replies[randomIndex];
-              break;
-            }
-          }
+    toLoginLink.addEventListener('click', () => {
+      signupError.textContent = '';
+      showSection(loginSection);
+    });
 
-          const botMessage = {
-            text: responseText,
-            sender: 'bot',
-            timestamp: Date.now()
-          };
+    toSignupLink.addEventListener('click', () => {
+      loginError.textContent = '';
+      showSection(signupSection);
+    });
 
-          // Push bot message to Firebase after a short delay to simulate typing
-          setTimeout(() => {
-            const messagesRef = database.ref('messages');
-            messagesRef.push(botMessage);
-          }, 800);
-        },
-        scrollToBottom() {
-          this.$nextTick(() => {
-            const chatWindow = this.$el.querySelector('.chat-window');
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-          });
-        }
+    signupForm.addEventListener('submit', e => {
+      e.preventDefault();
+      signupError.textContent = '';
+      const email = signupForm.email.value.trim();
+      const password = signupForm.password.value.trim();
+
+      if (!email || !password) {
+        signupError.textContent = 'Email and password are required.';
+        return;
       }
-    }).mount('#app');
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          loadDashboard(userCredential.user);
+        })
+        .catch(error => {
+          signupError.textContent = error.message;
+        });
+    });
+
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      loginError.textContent = '';
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value.trim();
+
+      if (!email || !password) {
+        loginError.textContent = 'Email and password are required.';
+        return;
+      }
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          loadDashboard(userCredential.user);
+        })
+        .catch(error => {
+          loginError.textContent = error.message;
+        });
+    });
+
+    logoutLink.addEventListener('click', () => {
+      auth.signOut().then(() => {
+        showSection(loginSection);
+      });
+    });
+
+    // Monitor auth state
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loadDashboard(user);
+      } else {
+        showSection(loginSection);
+      }
+    });
   </script>
 </body>
 </html>

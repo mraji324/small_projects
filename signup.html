@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signup - Gaming App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Signup</h1>
+    <form id="signupForm">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <p id="error" class="error"></p>
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+
+  <script>
+    const signupForm = document.getElementById('signupForm');
+    const errorEl = document.getElementById('error');
+
+    signupForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = signupForm.username.value.trim();
+      const password = signupForm.password.value.trim();
+
+      if (!username || !password) {
+        errorEl.textContent = 'Username and password are required.';
+        return;
+      }
+
+      // Check if user already exists in localStorage
+      if (localStorage.getItem('user_' + username)) {
+        errorEl.textContent = 'Username already exists.';
+        return;
+      }
+
+      // Save user to localStorage
+      localStorage.setItem('user_' + username, password);
+      // Set logged in user
+      sessionStorage.setItem('loggedInUser', username);
+      // Redirect to dashboard
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

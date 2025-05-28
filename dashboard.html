@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Gaming App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome, <span id="username"></span>!</h1>
+    <a href="login.html" id="logout" class="logout">Logout</a>
+    <h2>Available Games</h2>
+    <ul class="games-list" id="gamesList"></ul>
+  </div>
+
+  <script>
+    const usernameSpan = document.getElementById('username');
+    const gamesList = document.getElementById('gamesList');
+    const logoutLink = document.getElementById('logout');
+
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    if (!loggedInUser) {
+      // Not logged in, redirect to login page
+      window.location.href = 'login.html';
+    } else {
+      usernameSpan.textContent = loggedInUser;
+    }
+
+    const games = [
+      { id: 1, name: 'Chess' },
+      { id: 2, name: 'Sudoku' },
+      { id: 3, name: 'Tetris' },
+      { id: 4, name: 'Pac-Man' },
+    ];
+
+    games.forEach(game => {
+      const li = document.createElement('li');
+      li.textContent = game.name;
+      gamesList.appendChild(li);
+    });
+
+    logoutLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      sessionStorage.removeItem('loggedInUser');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
