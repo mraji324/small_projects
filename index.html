@@ -1,16 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>User Input Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Software Job Application Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f4f4f4;
+    }
+    form {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .success-message {
+      margin-top: 1rem;
+      color: green;
+      font-weight: bold;
+    }
+    .error-message {
+      margin-top: 1rem;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-    <h1>User Input Form</h1>
-    <form id="userForm" action="submit.php" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required />
-        <button type="submit">Submit</button>
-    </form>
+  <h1>Software Job Application</h1>
+  <form id="applicationForm">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" required />
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone" required />
+
+    <label for="resume">Resume Link (e.g., Google Drive, Dropbox)</label>
+    <input type="url" id="resume" name="resume" required />
+
+    <label for="coverLetter">Cover Letter</label>
+    <textarea id="coverLetter" name="coverLetter" rows="5" required></textarea>
+
+    <button type="submit">Submit Application</button>
+    <div id="message"></div>
+  </form>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
